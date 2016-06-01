@@ -1,17 +1,19 @@
-#include <Wtv020sd16p.h>
-
-Wtv020sd16p wtv020sd16p(resetPin,clockPin,dataPin,busyPin);
-
-void say(int number) {
-    wtv020sd16p.reset();
+void say(unsigned long number) {
     int length;
     int* sounds = numberToFileNames(number, length);
+    Serial.print(number);
+    Serial.print(": ");
     for (int i = 0; i < length; i++) {
         wtv020sd16p.asyncPlayVoice(sounds[i]);
+        Serial.print("<");
+        Serial.print(sounds[i]);
+        Serial.print(">");
+        delay(1100);
     }
+    Serial.println();
 }
 
-int* numberToFileNames(int number, int &length) {
+int* numberToFileNames(unsigned long number, int &length) {
     String digits = String(number);
     int* sounds = new int[10];
     length = 0;
@@ -23,7 +25,7 @@ int* numberToFileNames(int number, int &length) {
             digit = digits[++i] - '0';
         }
         bool isThousand = digits.length() - i == 4;
-        if (isThousand && digit == 2) {
+        if (isThousand && row != 4 && digit == 2) {
             sounds[length++] = 40;
         } else if (!(isThousand && digit == 1 && row != 4) && digit != 0) {
             sounds[length++] = 9 * (row - 1) + digit;

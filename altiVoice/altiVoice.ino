@@ -18,22 +18,15 @@ void setup()
 //Initializes the module.
 wtv020sd16p.reset();
 // initialize the SELECTOR and Trigger button pins as a inputs:
-Serial.begin(9600); 
-        
-wtv020sd16p.asyncPlayVoice(0);
+Serial.begin(9600);
 }
 void loop() 
 {
   while (Serial.available() > 0) // Don't read unless
   {
-    int i;
-    i = Serial.parseInt();
-    Serial.println(i);
-    Serial.println("Song");
-    wtv020sd16p.asyncPlayVoice(i);
-    
-    Serial.println(" M");
-    delay(1000);
+    unsigned long number = Serial.parseInt();
+    say(number);
+    wtv020sd16p.reset();
   }
          
 }
